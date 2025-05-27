@@ -8,10 +8,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <div id="background-animation"></div>
+  <canvas id="background-animation"></canvas>
 
   <div class="login-container">
     <h1>Entrar no Sistema</h1>
+    
+    {% if erro %}
+      <div style="background: #e74c3c; color: white; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        {{ erro }}
+      </div>
+    {% endif %}
+    
     <form method="POST" action="{{ url_for('login') }}">
       <div class="input-group">
         <i class="fas fa-envelope"></i>
@@ -24,13 +31,11 @@
       <button type="submit">Acessar</button>
     </form>
     <p><a href="{{ url_for('cadastro') }}">Não tem uma conta? Cadastre-se</a></p>
+    <p><a href="{{ url_for('home') }}">← Voltar ao início</a></p>
   </div>
 
   <script>
-    const canvas = document.createElement('canvas');
-    canvas.id = 'background-animation';
-    document.body.appendChild(canvas);
-
+    const canvas = document.getElementById('background-animation');
     const ctx = canvas.getContext('2d');
     let w = canvas.width = window.innerWidth;
     let h = canvas.height = window.innerHeight;
