@@ -1,100 +1,317 @@
-<!-- templates/admin_cliente.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Indicações - {{ cliente.nome }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Indicações - {{ cliente.nome }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: Arial;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
       padding: 20px;
-      background: #f4f4f4;
+      margin: 0;
     }
 
-    h2 {
-      color: #4b0082;
+    .header {
+      background: #4b0082;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: #6c757d;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+
+    .back-btn:hover {
+      background: #545b62;
+    }
+
+    .parabens {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      animation: celebration 0.6s ease-out;
+    }
+
+    @keyframes celebration {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
+      margin-bottom: 30px;
     }
 
     th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #e9ecef;
     }
 
     th {
-      background-color: #4b0082;
-      color: white;
+      background: #f8f9fa;
+      color: #495057;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: #f8f9fa;
     }
 
     input[type="checkbox"] {
-      transform: scale(1.4);
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #4b0082;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      transform: scale(1.3);
       cursor: pointer;
     }
 
-    button:hover {
+    .checkbox-cell {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .approve-checkbox {
+      accent-color: #28a745;
+    }
+
+    .delete-checkbox {
+      accent-color: #dc3545;
+    }
+
+    .save-btn {
+      background: #4b0082;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+    }
+
+    .save-btn:hover {
       background: #673ab7;
     }
 
-    .back-link {
-      margin-bottom: 20px;
-      display: inline-block;
-      text-decoration: none;
-      background: #ccc;
-      padding: 6px 12px;
-      border-radius: 4px;
-      color: #000;
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border: 2px dashed #dee2e6;
     }
 
-    .back-link:hover {
-      background: #bbb;
+    .search-container {
+      margin-bottom: 25px;
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 400px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      font-size: 16px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    .search-box input:focus {
+      border-color: #4b0082;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.1);
+    }
+
+    .legend {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #e9ecef;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      table {
+        font-size: 14px;
+      }
+      
+      th, td {
+        padding: 10px 8px;
+      }
+      
+      .legend {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <a href="{{ url_for('admin') }}" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Voltar para lista de clientes
+  </a>
 
-  <a href="{{ url_for('admin') }}" class="back-link">← Voltar para lista de clientes</a>
+  <div class="header">
+    <h2><i class="fas fa-user-edit"></i> Gerenciar Indicações de {{ cliente.nome }}</h2>
+    <p style="margin: 10px 0 0 0; opacity: 0.9;">{{ cliente.email }}</p>
+  </div>
 
-  <h2>Indicações de {{ cliente.nome }}</h2>
+  {% if show_parabens %}
+    <div class="parabens">
+      🎉 Parabéns! {{ cliente.nome }} completou 6 indicações aprovadas e ganhou 12 meses grátis! 🎊
+    </div>
+  {% endif %}
 
-  <form method="POST">
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Aprovado?</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in indicacoes %}
-        <tr>
-          <td>{{ i.nome }}</td>
-          <td>{{ i.email }}</td>
-          <td style="text-align: center;">
-            <input type="checkbox" name="assinou" value="{{ i.id }}" {% if i.assinou %}checked{% endif %}>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <button type="submit">Salvar Aprovações</button>
-  </form>
+  <div class="form-container">
+    {% if indicacoes %}
+      <!-- Campo de pesquisa -->
+      <div class="search-container">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Pesquisar por nome do indicado..." onkeyup="filterTable()">
+        </div>
+      </div>
 
+      <div class="legend">
+        <div class="legend-item">
+          <input type="checkbox" class="approve-checkbox" disabled>
+          <span>Aprovar indicação</span>
+        </div>
+        <div class="legend-item">
+          <input type="checkbox" class="delete-checkbox" disabled>
+          <span>Excluir indicação</span>
+        </div>
+      </div>
+
+      <form method="POST">
+        <table id="indicacoesTable">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user"></i> Nome</th>
+              <th><i class="fas fa-envelope"></i> Email</th>
+              <th class="checkbox-cell"><i class="fas fa-check"></i> Aprovado?</th>
+              <th class="checkbox-cell"><i class="fas fa-trash"></i> Excluir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in indicacoes %}
+            <tr>
+              <td>{{ i.nome }}</td>
+              <td>{{ i.email or '-' }}</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" name="assinou" value="{{ i.id }}" class="approve-checkbox" {% if i.assinou %}checked{% endif %}>
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" name="excluir" value="{{ i.id }}" class="delete-checkbox">
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <button type="submit" class="save-btn">
+          <i class="fas fa-save"></i> Salvar Alterações
+        </button>
+      </form>
+    {% else %}
+      <div class="no-data">
+        <i class="fas fa-users" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+        <h3>Nenhuma indicação encontrada</h3>
+        <p>{{ cliente.nome }} ainda não fez nenhuma indicação.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // Função de pesquisa
+    function filterTable() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById('indicacoesTable');
+      const rows = table.getElementsByTagName('tr');
+
+      // Percorre todas as linhas da tabela (exceto o cabeçalho)
+      for (let i = 1; i < rows.length; i++) {
+        const nameCell = rows[i].getElementsByTagName('td')[0];
+        if (nameCell) {
+          const nameText = nameCell.textContent || nameCell.innerText;
+          if (nameText.toLowerCase().indexOf(filter) > -1) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // Add confirmation for delete actions
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          const deleteCheckboxes = document.querySelectorAll('input[name="excluir"]:checked');
+          if (deleteCheckboxes.length > 0) {
+            if (!confirm(`Tem certeza que deseja excluir ${deleteCheckboxes.length} indicação(ões)?`)) {
+              e.preventDefault();
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 
