@@ -2,7 +2,8 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Bem-vindo ao Sistema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo ao Sistema de Indicações IPTV</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -44,6 +45,7 @@
       margin: 8px 0;
       border: none;
       border-radius: 8px;
+      box-sizing: border-box;
     }
 
     .admin-login button {
@@ -69,12 +71,12 @@
 <body>
   <canvas id="background-animation"></canvas>
 
-  <!-- Ícone do menu admin -->
+  <!-- Admin menu icon -->
   <div id="adminMenuIcon" style="position: absolute; top: 20px; left: 20px; cursor: pointer; z-index: 1000;">
     <i class="fas fa-bars" style="font-size: 24px; color: white;"></i>
   </div>
 
-  <!-- Login administrativo real (Flask) -->
+  <!-- Admin login modal -->
   <div id="adminLoginModal" class="admin-login">
     <h3 style="margin-top: 0;">Admin</h3>
     <form method="POST" action="{{ url_for('login_admin') }}">
@@ -98,10 +100,8 @@
     </div>
 
     <div style="margin-top: 30px;">
-      <p>Siga-nos:</p>
+      <p>Suporte:</p>
       <div class="social-icons" style="display: flex; justify-content: center; gap: 20px; font-size: 20px;">
-        <a href="https://www.instagram.com/_adriano_gomez_?igsh=cmt1dDBueWJrcHNs" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://facebook.com/seu_usuario" target="_blank"><i class="fab fa-facebook"></i></a>
         <a href="https://l.glite.me/melhorstreaming" target="_blank"><i class="fab fa-whatsapp"></i></a>
       </div>
     </div>
@@ -160,7 +160,7 @@
       h = canvas.height = window.innerHeight;
     });
 
-    // Mostrar/ocultar o modal admin
+    // Show/hide admin modal
     document.getElementById('adminMenuIcon').addEventListener('click', function () {
       const modal = document.getElementById('adminLoginModal');
       modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
