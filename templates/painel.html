@@ -5,74 +5,77 @@
   <title>Painel do Cliente</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <canvas id="background-animation"></canvas>
-
+  
   <div class="painel-container">
-    <h1>Olá, {{ cliente.nome }}</h1>
-    <p><strong>Indicações:</strong> {{ cliente.indicacoes }}</p>
-    <p><strong>Meses de bônus:</strong> {{ cliente.meses_bonus }}</p>
+    {% if show_parabens %}
+      <div class="mensagem-parabens">
+        🎉 Parabéns! Você completou 6 indicações aprovadas e ganhou <strong>12 meses grátis!</strong> 🎊🔥
+      </div>
+    {% endif %}
+
+    <h1>Olá, {{ cliente.nome }}!</h1>
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; margin: 15px 0;">
+      <p><strong>Indicações aprovadas:</strong> {{ cliente.indicacoes }}</p>
+      <p><strong>Meses de bônus:</strong> {{ cliente.meses_bonus }}</p>
+    </div>
 
     <h2>Indicar um Amigo</h2>
-    <form method="POST" action="/indicar_amigo" style="margin-bottom: 20px;">
+    <form method="POST" action="/indicar_amigo">
       <div class="input-group">
         <i class="fas fa-user-friends"></i>
-        <input type="text" name="nome_amigo" id="nome_amigo" placeholder="Nome do amigo" required>
+        <input type="text" name="nome_amigo" placeholder="Nome do amigo" required>
       </div>
       <button type="submit" class="whatsapp-button">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        Compartilhar link
+        <i class="fab fa-whatsapp"></i>
+        Compartilhar no WhatsApp
       </button>
     </form>
 
     <h2>Progresso de Indicações</h2>
-    <div class="progress-bar-container">
-      <div class="progress-bar" style="width: {{ progresso_percent }}%;">
-        {{ progresso_percent }}% ({{ total_assinantes }}/{{ total_indicados }} confirmados)
-      </div>
+    <div class="progress-bar">
+      <div class="progress-bar-fill" style="width: {{ progresso_percent }}%;"></div>
     </div>
+    <p>{{ progresso_percent }}% ({{ total_assinantes }}/{{ total_indicados }} confirmados)</p>
 
     <h2>Seus Indicados</h2>
     {% if indicados %}
-    <div class="tabela-indicacoes">
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for indicado in indicados %}
-          <tr>
-            <td>{{ indicado.nome }}</td>
-            <td>{{ indicado.email }}</td>
-            <td>
-              {% if indicado.assinou %}
-                <span style="color: lightgreen;">Assinou</span>
-              {% else %}
-                <span style="color: orange;">Pendente</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+    <table class="tabela-indicados">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for indicado in indicados %}
+        <tr>
+          <td>{{ indicado.nome }}</td>
+          <td>
+            {% if indicado.assinou %}
+              <span class="status-assinou">✅ Assinou</span>
+            {% else %}
+              <span class="status-pendente">⏳ Pendente</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% else %}
-      <p style="color: #ccc;">Nenhum indicado até agora.</p>
+      <p style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+        Nenhum indicado até agora. Comece indicando seus amigos!
+      </p>
     {% endif %}
 
-    {% if total_indicados > 0 %}
-    <h2 style="margin-top:30px;">Gráfico de Indicações</h2>
-    <canvas id="indicadosChart" width="400" height="200"></canvas>
-    {% endif %}
-
-    <p style="text-align:center; margin-top: 30px;"><a href="/logout">Sair</a></p>
+    <div style="margin-top: 30px; text-align: center;">
+      <a href="/logout" style="background: #e74c3c; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </a>
+    </div>
   </div>
 
   <script>
@@ -93,7 +96,8 @@
 
     function draw() {
       ctx.clearRect(0, 0, w, h);
-      for (let p of points) {
+      for (let i = 0; i < points.length; i++) {
+        let p = points[i];
         p.x += p.vx;
         p.y += p.vy;
 
@@ -105,7 +109,8 @@
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.fill();
 
-        for (let q of points) {
+        for (let j = i + 1; j < points.length; j++) {
+          let q = points[j];
           let dist = Math.hypot(p.x - q.x, p.y - q.y);
           if (dist < 100) {
             ctx.beginPath();
@@ -125,30 +130,6 @@
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     });
-
-    {% if total_indicados > 0 %}
-    const ctxChart = document.getElementById('indicadosChart').getContext('2d');
-    new Chart(ctxChart, {
-      type: 'doughnut',
-      data: {
-        labels: ['Assinaram', 'Pendentes'],
-        datasets: [{
-          data: [{{ total_assinantes }}, {{ total_indicados - total_assinantes }}],
-          backgroundColor: ['#2ecc71', '#f39c12'],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            labels: {
-              color: '#fff'
-            }
-          }
-        }
-      }
-    });
-    {% endif %}
   </script>
 </body>
 </html>
