@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Bem-vindo ao Sistema</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .button-group a button {
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .button-group a button:hover {
+      transform: scale(1.05);
+      background-color: #9b59b6;
+    }
+
+    .social-icons a {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      transform: scale(1.2);
+      color: #ffd700;
+    }
+
+    .admin-login {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      color: white;
+      width: 250px;
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .admin-login input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .admin-login button {
+      width: 100%;
+      padding: 10px;
+      background-color: #f1c40f;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .admin-login button:hover {
+      background-color: #d4ac0d;
+    }
+
+    .error-msg {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="background-animation"></canvas>
+
+  <!-- Ícone do menu admin -->
+  <div id="adminMenuIcon" style="position: absolute; top: 20px; left: 20px; cursor: pointer; z-index: 1000;">
+    <i class="fas fa-bars" style="font-size: 24px; color: white;"></i>
+  </div>
+
+  <!-- Login administrativo real (Flask) -->
+  <div id="adminLoginModal" class="admin-login">
+    <h3 style="margin-top: 0;">Admin</h3>
+    <form method="POST" action="{{ url_for('login_admin') }}">
+      <input type="text" name="usuario" placeholder="Usuário" required>
+      <input type="password" name="senha" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <div class="login-container">
+    <h1>Bem-vindo!</h1>
+    <p>Ganhe <strong>meses grátis</strong> indicando amigos para o nosso serviço de streaming!</p>
+    
+    <div class="button-group" style="display: flex; gap: 10px; flex-direction: column; margin-top: 20px;">
+      <a href="{{ url_for('login') }}">
+        <button><i class="fas fa-sign-in-alt"></i> Acessar Painel</button>
+      </a>
+      <a href="{{ url_for('cadastro') }}">
+        <button style="background: #6c5ce7;"><i class="fas fa-user-plus"></i> Cadastrar-se</button>
+      </a>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <p>Siga-nos:</p>
+      <div class="social-icons" style="display: flex; justify-content: center; gap: 20px; font-size: 20px;">
+        <a href="https://www.instagram.com/_adriano_gomez_?igsh=cmt1dDBueWJrcHNs" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/seu_usuario" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="https://l.glite.me/melhorstreaming" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('background-animation');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    let points = [];
+
+    for (let i = 0; i < 100; i++) {
+      points.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < points.length; i++) {
+        let p = points[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+
+        for (let j = i + 1; j < points.length; j++) {
+          let q = points[j];
+          let dist = Math.hypot(p.x - q.x, p.y - q.y);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    // Mostrar/ocultar o modal admin
+    document.getElementById('adminMenuIcon').addEventListener('click', function () {
+      const modal = document.getElementById('adminLoginModal');
+      modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
+

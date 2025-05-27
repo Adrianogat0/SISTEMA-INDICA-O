@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div id="background-animation"></div>
+
+  <div class="cadastro-container">
+    <h1>Crie sua conta</h1>
+    <form method="POST">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" name="nome" placeholder="Seu nome" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" name="email" placeholder="Seu e-mail" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-phone"></i>
+        <input type="tel" name="telefone" placeholder="Seu telefone" required>
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="senha" placeholder="Sua senha" required>
+      </div>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <p><a href="{{ url_for('login') }}">Já tem uma conta? Faça login</a></p>
+  </div>
+
+  <script>
+    const canvas = document.createElement('canvas');
+    canvas.id = 'background-animation';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    let points = [];
+
+    for (let i = 0; i < 100; i++) {
+      points.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < points.length; i++) {
+        let p = points[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+
+        for (let j = i + 1; j < points.length; j++) {
+          let q = points[j];
+          let dist = Math.hypot(p.x - q.x, p.y - q.y);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
+

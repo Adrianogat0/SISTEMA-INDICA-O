@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel do Cliente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <canvas id="background-animation"></canvas>
+
+  <div class="painel-container">
+    <h1>Olá, {{ cliente.nome }}</h1>
+    <p><strong>Indicações:</strong> {{ cliente.indicacoes }}</p>
+    <p><strong>Meses de bônus:</strong> {{ cliente.meses_bonus }}</p>
+
+    <h2>Indicar um Amigo</h2>
+    <form method="POST" action="/indicar_amigo" style="margin-bottom: 20px;">
+      <div class="input-group">
+        <i class="fas fa-user-friends"></i>
+        <input type="text" name="nome_amigo" id="nome_amigo" placeholder="Nome do amigo" required>
+      </div>
+      <button type="submit" class="whatsapp-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        Compartilhar link
+      </button>
+    </form>
+
+    <h2>Progresso de Indicações</h2>
+    <div class="progress-bar-container">
+      <div class="progress-bar" style="width: {{ progresso_percent }}%;">
+        {{ progresso_percent }}% ({{ total_assinantes }}/{{ total_indicados }} confirmados)
+      </div>
+    </div>
+
+    <h2>Seus Indicados</h2>
+    {% if indicados %}
+    <div class="tabela-indicacoes">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for indicado in indicados %}
+          <tr>
+            <td>{{ indicado.nome }}</td>
+            <td>{{ indicado.email }}</td>
+            <td>
+              {% if indicado.assinou %}
+                <span style="color: lightgreen;">Assinou</span>
+              {% else %}
+                <span style="color: orange;">Pendente</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p style="color: #ccc;">Nenhum indicado até agora.</p>
+    {% endif %}
+
+    {% if total_indicados > 0 %}
+    <h2 style="margin-top:30px;">Gráfico de Indicações</h2>
+    <canvas id="indicadosChart" width="400" height="200"></canvas>
+    {% endif %}
+
+    <p style="text-align:center; margin-top: 30px;"><a href="/logout">Sair</a></p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('background-animation');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    let points = [];
+
+    for (let i = 0; i < 100; i++) {
+      points.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let p of points) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+
+        for (let q of points) {
+          let dist = Math.hypot(p.x - q.x, p.y - q.y);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    {% if total_indicados > 0 %}
+    const ctxChart = document.getElementById('indicadosChart').getContext('2d');
+    new Chart(ctxChart, {
+      type: 'doughnut',
+      data: {
+        labels: ['Assinaram', 'Pendentes'],
+        datasets: [{
+          data: [{{ total_assinantes }}, {{ total_indicados - total_assinantes }}],
+          backgroundColor: ['#2ecc71', '#f39c12'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: {
+              color: '#fff'
+            }
+          }
+        }
+      }
+    });
+    {% endif %}
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
