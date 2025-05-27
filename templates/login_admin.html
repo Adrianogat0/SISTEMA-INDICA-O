@@ -2,61 +2,115 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Administrativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
-            background: #f0f0f5;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(145deg, #7a0eff, #55009b);
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
         .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px #aaa;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
             width: 350px;
+            max-width: 90%;
+        }
+        .login-container h2 {
+            color: #4b0082;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
         }
         input {
-            width: 90%;
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 1em;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #4b0082;
+            outline: none;
         }
         button {
-            padding: 10px 20px;
-            font-size: 1em;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
             background: #4b0082;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background 0.3s;
         }
         button:hover {
             background: #673ab7;
         }
         .erro {
-            color: red;
-            font-size: 0.9em;
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fdf2f2;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .back-link:hover {
+            color: #4b0082;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Login Administrativo</h2>
+        <h2>🔐 Login Administrativo</h2>
         <form method="POST" action="{{ url_for('login_admin') }}">
-            <input type="text" name="usuario" placeholder="Usuário" required><br>
-            <input type="password" name="senha" placeholder="Senha" required><br>
-            <button type="submit">Entrar</button>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="usuario" placeholder="Usuário" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="senha" placeholder="Senha" required>
+            </div>
+            <button type="submit">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
         </form>
+        
         {% if erro %}
-            <p class="erro">{{ erro }}</p>
+            <div class="erro">{{ erro }}</div>
         {% endif %}
+        
+        <a href="{{ url_for('home') }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Voltar ao início
+        </a>
     </div>
 </body>
 </html>
