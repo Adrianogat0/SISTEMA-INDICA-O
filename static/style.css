@@ -1,156 +1,443 @@
-/* Fundo roxo claro degradê com animação */
+/* Modern IPTV Referral System Styles */
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(145deg, #5400b8, #d1a4f5);
-    font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #7a0eff, #55009b);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
 }
 
-/* Canvas com teia animada */
+/* Animated Background Canvas */
 #background-animation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* Container geral para login, cadastro e painel */
+/* Container Styles */
 .login-container,
 .cadastro-container,
 .painel-container {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 40px;
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    width: 380px; /* Aumentado para telas maiores */
-    max-width: 90%;
-    text-align: center;
-    color: #fff;
-    animation: fadeSlideIn 1s ease forwards;
-    box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  color: #fff;
+  animation: fadeSlideIn 1s ease forwards;
+  margin: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Títulos */
-.login-container h1,
-.cadastro-container h1,
-.painel-container h1 {
-    margin-bottom: 25px;
-    font-size: 28px;
-    color: #fff;
+.painel-container {
+  max-width: 600px;
+  text-align: left;
 }
 
-/* Animação de entrada suave */
+/* Typography */
+h1, h2, h3 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 28px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 22px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+/* Animations */
 @keyframes fadeSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Grupos de input com ícones */
+@keyframes popin {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Input Styles */
 .input-group {
-    position: relative;
-    margin-bottom: 15px;
-    width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .input-group i {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #ddd;
-    font-size: 18px;
-    pointer-events: none;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ddd;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.input-group input {
-    width: 100%;
-    padding-left: 45px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    border: none;
-    color: #fff;
-    font-size: 15px;
-    height: 42px;
-    outline: none;
-    transition: background 0.3s ease;
-    box-sizing: border-box;
+.input-group input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  border: 2px solid transparent;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-.input-group input::placeholder {
-    color: #eee;
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.input-group input:focus {
-    background: rgba(255, 255, 255, 0.3);
+input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Botões padrão */
-button {
-    width: 100%;
-    padding: 12px;
-    background: #8e44ad;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
+/* Button Styles */
+button,
+.whatsapp-button {
+  width: 100%;
+  padding: 15px 20px;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
 }
 
-button:hover {
-    background: #732d91;
+button:hover,
+.whatsapp-button:hover {
+  background: #1ebe5d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
-/* Links padrão */
+button:active {
+  transform: translateY(0);
+}
+
+/* Special Button Variants */
+button[style*="6c5ce7"] {
+  background: #6c5ce7 !important;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+button[style*="6c5ce7"]:hover {
+  background: #5a4fcf !important;
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+}
+
+/* Links */
 a {
-    color: #ffe;
-    text-decoration: underline;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-.link-indicacao {
-    color: #f2f22c;
-    font-weight: bold;
-    word-break: break-word;
+a:hover {
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
-/* Responsividade para dispositivos móveis */
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 20px 0;
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffed4a);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Table Styles */
+.tabela-indicados {
+  width: 100%;
+  margin-top: 25px;
+  border-collapse: collapse;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.tabela-indicados th,
+.tabela-indicados td {
+  padding: 15px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabela-indicados th {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+}
+
+.tabela-indicados tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela-indicados tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Status Indicators */
+.status-assinou {
+  color: #2ecc71;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-pendente {
+  color: #f39c12;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Success Message */
+.mensagem-parabens {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+  text-align: center;
+  animation: popin 0.6s ease-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Social Icons */
+.social-icons a {
+  color: #25D366;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #1ebe5d;
+  transform: scale(1.2);
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.button-group a {
+  text-decoration: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-container,
+  .cadastro-container,
+  .painel-container {
+    margin: 10px;
+    padding: 30px 25px;
+    width: calc(100% - 20px);
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input,
+  button {
+    font-size: 16px;
+    padding: 12px 15px 12px 40px;
+  }
+
+  button {
+    padding: 12px 20px;
+  }
+
+  .tabela-indicados {
+    font-size: 14px;
+  }
+
+  .tabela-indicados th,
+  .tabela-indicados td {
+    padding: 10px 8px;
+  }
+}
+
 @media (max-width: 480px) {
-    .login-container,
-    .cadastro-container {
-        width: 90vw;
-        padding: 30px 20px;
-    }
+  .login-container,
+  .cadastro-container,
+  .painel-container {
+    padding: 25px 20px;
+  }
 
-    .input-group input {
-        font-size: 16px;
-        height: 48px;
-    }
+  .input-group i {
+    left: 12px;
+    font-size: 14px;
+  }
 
-    button {
-        font-size: 18px;
-        padding: 14px;
-    }
+  input {
+    padding-left: 35px;
+  }
 
-    .login-container h1,
-    .cadastro-container h1 {
-        font-size: 24px;
-    }
+  .mensagem-parabens {
+    font-size: 14px;
+    padding: 15px;
+  }
 }
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Styles for Accessibility */
+button:focus,
+input:focus,
+a:focus {
+  outline: 3px solid rgba(255, 215, 0, 0.6);
+  outline-offset: 2px;
+}
+
+/* Loading States */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Error States */
+.error-message {
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Success States */
+.success-message {
+  background: rgba(46, 204, 113, 0.9);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  /* Already optimized for dark mode */
+}
+
 
 
 
