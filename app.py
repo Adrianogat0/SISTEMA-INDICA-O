@@ -180,12 +180,12 @@ def indicar_amigo():
 *🔏Ativação da Licença Anual GRÁTIS*
 *⏳Teste GRÁTIS de 3 horas*
 
- 📺TV Ao Vivo      ⚽Futebol  
+ 📺TV Ao Vivo     ⚽Futebol  
  🎬Filmes            🎞️Séries  
  🌐 Notícias        🥅Sportv 
  🥊UFC                📽️Novelas       
  👧🏼 Infantil          🔞Adulto 
- 🍿Telecine          🏰Disney
+ 🍿Telecine         🏰Disney
 
 _*CLIQUE NO LINK E PEÇA UM TESTE GRÁTIS*_
 
