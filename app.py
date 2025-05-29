@@ -181,11 +181,11 @@ def indicar_amigo():
 *⏳Teste GRÁTIS de 3 horas*
 
  📺TV Ao Vivo      ⚽Futebol  
- 🎬Filmes          🎞️Séries  
- 🌐 Notícias       🥅Sportv 
- 🥊UFC             📽️Novelas       
- 👧🏼 Infantil       🔞Adulto 
- 🍿Telecine        🏰Disney
+ 🎬Filmes            🎞️Séries  
+ 🌐 Notícias        🥅Sportv 
+ 🥊UFC                📽️Novelas       
+ 👧🏼 Infantil          🔞Adulto 
+ 🍿Telecine          🏰Disney
 
 _*CLIQUE NO LINK E PEÇA UM TESTE GRÁTIS*_
 
