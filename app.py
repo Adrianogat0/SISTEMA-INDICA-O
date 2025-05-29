@@ -172,14 +172,13 @@ def indicar_amigo():
         ''', (cliente_id, nome_amigo, '', 0))
         conn.commit()
         conn.close()
-
-        nome_cliente = session.get('cliente_nome')
-        mensagem = f"""👤 Indicado: *{nome_amigo}*
-
-*🔰Plano Mensal = R$ 30,00 Reais*
+    
+*✅(1 Ano GRÁTIS) indicando amigos*
+*🔰Grupo VIP Promoção do dia*
 *🔏Ativação da Licença Anual GRÁTIS*
 *⏳Teste GRÁTIS de 3 horas*
 
+*🔴Contém...*
  📺TV Ao Vivo     ⚽Futebol  
  🎬Filmes            🎞️Séries  
  🌐 Notícias        🥅Sportv 
@@ -187,7 +186,7 @@ def indicar_amigo():
  👧🏼 Infantil          🔞Adulto 
  🍿Telecine         🏰Disney
 
-_*CLIQUE NO LINK E PEÇA UM TESTE GRÁTIS*_
+_*CLIQUE NO LINK E PEÇA UM TESTE GRÁTIS😉*_
 
 🪀https://wa.me/5594984252041?text={urllib.parse.quote(f'Olá Adriano! Fui indicado por: *{nome_cliente}* e quero um TESTE!')}"""
 
