@@ -2,7 +2,7 @@ import os
 import sqlite3
 import urllib.parse
 import logging
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from functools import wraps
 
 # Configure logging for better debugging
@@ -15,6 +15,8 @@ def get_db_connection():
     """Get database connection with proper row factory"""
     conn = sqlite3.connect('banco.db')
     conn.row_factory = sqlite3.Row
+    # Enable foreign key constraints
+    conn.execute('PRAGMA foreign_keys = ON')
     return conn
 
 def init_database():
@@ -45,7 +47,7 @@ def init_database():
                 nome TEXT NOT NULL,
                 email TEXT NOT NULL,
                 assinou INTEGER DEFAULT 0,
-                FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+                FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
             )
         ''')
         
@@ -225,7 +227,47 @@ def admin():
     conn = get_db_connection()
     clientes = conn.execute('SELECT id, nome, email, indicacoes, meses_bonus FROM clientes').fetchall()
     conn.close()
-    return render_template('admin.html', clientes=clientes)
+    
+    # Get any flash messages
+    success_message = session.pop('success_message', None)
+    error_message = session.pop('error_message', None)
+    
+    return render_template('admin.html', clientes=clientes, 
+                         success_message=success_message, error_message=error_message)
+
+@app.route('/admin/delete_cliente/<int:cliente_id>', methods=['POST'])
+@admin_login_required
+def delete_cliente(cliente_id):
+    """Delete client and all their referrals"""
+    try:
+        conn = get_db_connection()
+        
+        # First, get client info for logging
+        cliente = conn.execute('SELECT nome, email FROM clientes WHERE id = ?', (cliente_id,)).fetchone()
+        
+        if not cliente:
+            session['error_message'] = 'Cliente não encontrado.'
+            conn.close()
+            return redirect(url_for('admin'))
+        
+        # Delete client (this will cascade delete referrals due to foreign key constraint)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM clientes WHERE id = ?', (cliente_id,))
+        
+        if cursor.rowcount == 0:
+            session['error_message'] = 'Cliente não encontrado.'
+        else:
+            conn.commit()
+            session['success_message'] = f'Cliente "{cliente["nome"]}" foi excluído com sucesso.'
+            logging.info(f"Admin deleted client: {cliente['nome']} ({cliente['email']}) - ID: {cliente_id}")
+        
+        conn.close()
+        
+    except Exception as e:
+        logging.error(f"Error deleting client {cliente_id}: {str(e)}")
+        session['error_message'] = f'Erro ao excluir cliente: {str(e)}'
+    
+    return redirect(url_for('admin'))
 
 @app.route('/admin/cliente/<int:cliente_id>', methods=['GET', 'POST'])
 @admin_login_required
@@ -297,6 +339,8 @@ def internal_error(error):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+
 
 
 
