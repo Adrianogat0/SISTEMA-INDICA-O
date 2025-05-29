@@ -172,7 +172,7 @@ def indicar_amigo():
         ''', (cliente_id, nome_amigo, '', 0))
         conn.commit()
         conn.close()
-      nome_cliente = session.get('cliente_nome')
+        nome_cliente = session.get('cliente_nome')
         mensagem = f"""👤 Indicado: *{nome_amigo}*
         
 *✅(1 Ano GRÁTIS) indicando amigos*
